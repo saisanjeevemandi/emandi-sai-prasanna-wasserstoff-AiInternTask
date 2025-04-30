@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from backend.core.rule_check import does_beat
 from fastapi import Request
 from backend.core.moderation import contains_profanity
 from backend.core.cache import get_cached_result, set_cached_result
@@ -76,21 +77,28 @@ async def guess_handler(request: GuessRequest, http_req: Request):
             "reason": "Inappropriate guess detected. Please keep it clean.",
             "score": game.score
         }
-
-    # ✅ Check Redis cache first
-    cached_result = get_cached_result(seed_word, guessed_word)
-    if cached_result:
-        ai_result = cached_result
-    else:
-        ai_result = await validate_guess(seed_word, guessed_word, persona)
-        set_cached_result(seed_word, guessed_word, ai_result)
-
-    if ai_result != "YES":
+    
+    if not does_beat(guessed_word, seed_word):
         return {
             "result": "Wrong Guess",
             "message": f"{guessed_word} does NOT beat {seed_word}!",
             "score": game.score
         }
+
+    # # ✅ Check Redis cache first
+    # cached_result = get_cached_result(seed_word, guessed_word)
+    # if cached_result:
+    #     ai_result = cached_result
+    # else:
+    #     ai_result = await validate_guess(seed_word, guessed_word, persona)
+    #     set_cached_result(seed_word, guessed_word, ai_result)
+
+    # if ai_result != "YES":
+    #     return {
+    #         "result": "Wrong Guess",
+    #         "message": f"{guessed_word} does NOT beat {seed_word}!",
+    #         "score": game.score
+    #     }
 
     success = game.add_guess(guessed_word)
     if not success:

@@ -1,0 +1,25 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What Beats Rock?</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🔥 What Beats Rock?</h1>
+    <p>Start guessing what beats the seed word!</p>
+    <input id="seed" type="text" placeholder="Seed word (e.g., Rock)" />
+    <input id="guess" type="text" placeholder="Your guess (e.g., Paper)" />
+    <button onclick="submitGuess()">Submit Guess</button>
+
+    <div id="result"></div>
+    <div id="score">Score: 0</div>
+    <div id="history">History: </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
